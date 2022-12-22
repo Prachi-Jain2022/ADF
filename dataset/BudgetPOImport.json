@@ -1,0 +1,144 @@
+{
+	"name": "BudgetPOImport",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ExcelBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "POs",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Global Value Access FCST.xlsx",
+				"container": "input"
+			},
+			"range": "",
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "PO Number",
+				"type": "String"
+			},
+			{
+				"name": "Vendor Name",
+				"type": "String"
+			},
+			{
+				"name": "PO_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "PO Line Number",
+				"type": "String"
+			},
+			{
+				"name": "Item Description",
+				"type": "String"
+			},
+			{
+				"name": "A$Deliver_To_Person",
+				"type": "String"
+			},
+			{
+				"name": "Currency Code",
+				"type": "String"
+			},
+			{
+				"name": "Functional Currency Amount",
+				"type": "String"
+			},
+			{
+				"name": "Currency Code Base",
+				"type": "String"
+			},
+			{
+				"name": "Quantity Ordered",
+				"type": "String"
+			},
+			{
+				"name": "Quantity Billed",
+				"type": "String"
+			},
+			{
+				"name": "Closed_Date",
+				"type": "String"
+			},
+			{
+				"name": "PO_Header_Creation_Date",
+				"type": "String"
+			},
+			{
+				"name": "PO_Line_Open_Flag",
+				"type": "String"
+			},
+			{
+				"name": "Distribution Amount",
+				"type": "String"
+			},
+			{
+				"name": "Amount_Billed",
+				"type": "String"
+			},
+			{
+				"name": "Uninvoiced Amt",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SV$Le",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SV$Dept",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SV$Acct",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SD$Acct",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SV$Pr",
+				"type": "String"
+			},
+			{
+				"name": "AcctChrg$SD$Pr",
+				"type": "String"
+			},
+			{
+				"name": "Unit Price",
+				"type": "String"
+			},
+			{
+				"name": "Units",
+				"type": "String"
+			},
+			{
+				"name": "Closed_Code",
+				"type": "String"
+			},
+			{
+				"name": "JE_PO_DESCRIPTION",
+				"type": "String"
+			},
+			{
+				"name": "Distribution_Creation_Date",
+				"type": "String"
+			},
+			{
+				"name": "on tracker (excl closed)",
+				"type": "String"
+			},
+			{
+				"name": "Line Create Date",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

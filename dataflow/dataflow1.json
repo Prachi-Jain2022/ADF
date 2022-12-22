@@ -1,0 +1,113 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "TrackerInput",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "Blob",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Seagen owner} as string,",
+				"          {Dept#} as string,",
+				"          {Committed Status} as string,",
+				"          {Accrual owner} as string,",
+				"          {Dept Sub Category} as string,",
+				"          Vendor as string,",
+				"          {PO #} as string,",
+				"          {Follow Up} as string,",
+				"          {On CM Accrual File} as string,",
+				"          {GL#} as string,",
+				"          {Purchasing code} as string,",
+				"          {Program #} as string,",
+				"          Program as string,",
+				"          {Region (US, Global, Canada)} as string,",
+				"          {Contract description} as string,",
+				"          {Contract currency} as string,",
+				"          {Exchange rate} as string,",
+				"          {Contract value} as string,",
+				"          {PO status} as string,",
+				"          {% Invoiced} as string,",
+				"          {$ Invoiced} as string,",
+				"          {$ Uninvoiced} as string,",
+				"          {Effective Date} as string,",
+				"          {End Date} as string,",
+				"          {Term (months)} as string,",
+				"          {Max T&E } as string,",
+				"          {Accrual Source} as string,",
+				"          {Contract > $75k} as string,",
+				"          Year as string,",
+				"          {Un-Forecasted Balance} as string,",
+				"          {Prior Years} as string,",
+				"          {1} as string,",
+				"          {2} as string,",
+				"          {3} as string,",
+				"          Q1 as string,",
+				"          {4} as string,",
+				"          {5} as string,",
+				"          {6} as string,",
+				"          Q2 as string,",
+				"          {7} as string,",
+				"          {8} as string,",
+				"          {9} as string,",
+				"          Q3 as string,",
+				"          {10} as string,",
+				"          {11} as string,",
+				"          {12} as string,",
+				"          Q4 as string,",
+				"          {Current Yr} as string,",
+				"          {Future Periods} as string,",
+				"          Comments as string,",
+				"          Classification as string,",
+				"          {LTD ACTUALS FOR ACCRUAL REPORT} as string,",
+				"          {JAN-SEP YTD Expense} as string,",
+				"          {Over 150k?} as string,",
+				"          {Accrual Status} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          each(match(/* All input columns */true()),",
+				"               /* Input name */$$ = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     quoteAll: true,",
+				"     saveOrder: 1,",
+				"     outputAssertFailedRows: true,",
+				"     assertFailure_container: 'finaloutput',",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

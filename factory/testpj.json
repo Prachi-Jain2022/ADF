@@ -1,0 +1,9 @@
+{
+	"name": "testpj",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8d6215fe-7da1-49a2-be63-e4098e8cc1d6",
+		"tenantId": "6a059034-2900-4db1-9654-c8a9a462920f"
+	}
+}

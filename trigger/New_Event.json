@@ -1,0 +1,24 @@
+{
+	"name": "New_Event",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/input/blobs/Global Value Access FCST",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/96959c2e-92eb-451f-8505-fa7be397dfb5/resourceGroups/rg_First/providers/Microsoft.Storage/storageAccounts/adfstart",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

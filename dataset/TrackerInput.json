@@ -1,0 +1,244 @@
+{
+	"name": "TrackerInput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Tracker",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Global Value Access FCST.xlsx",
+				"container": "input"
+			},
+			"range": "A5:BC1000",
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Seagen owner",
+				"type": "String"
+			},
+			{
+				"name": "Dept#",
+				"type": "String"
+			},
+			{
+				"name": "Committed Status",
+				"type": "String"
+			},
+			{
+				"name": "Accrual owner",
+				"type": "String"
+			},
+			{
+				"name": "Dept Sub Category",
+				"type": "String"
+			},
+			{
+				"name": "Vendor",
+				"type": "String"
+			},
+			{
+				"name": "PO #",
+				"type": "String"
+			},
+			{
+				"name": "Follow Up",
+				"type": "String"
+			},
+			{
+				"name": "On CM Accrual File",
+				"type": "String"
+			},
+			{
+				"name": "GL#",
+				"type": "String"
+			},
+			{
+				"name": "Purchasing code",
+				"type": "String"
+			},
+			{
+				"name": "Program #",
+				"type": "String"
+			},
+			{
+				"name": "Program",
+				"type": "String"
+			},
+			{
+				"name": "Region (US, Global, Canada)",
+				"type": "String"
+			},
+			{
+				"name": "Contract description",
+				"type": "String"
+			},
+			{
+				"name": "Contract currency",
+				"type": "String"
+			},
+			{
+				"name": "Exchange rate",
+				"type": "String"
+			},
+			{
+				"name": "Contract value",
+				"type": "String"
+			},
+			{
+				"name": "PO status",
+				"type": "String"
+			},
+			{
+				"name": "% Invoiced",
+				"type": "String"
+			},
+			{
+				"name": "$ Invoiced",
+				"type": "String"
+			},
+			{
+				"name": "$ Uninvoiced",
+				"type": "String"
+			},
+			{
+				"name": "Effective Date",
+				"type": "String"
+			},
+			{
+				"name": "End Date",
+				"type": "String"
+			},
+			{
+				"name": "Term (months)",
+				"type": "String"
+			},
+			{
+				"name": "Max T&E ",
+				"type": "String"
+			},
+			{
+				"name": "Accrual Source",
+				"type": "String"
+			},
+			{
+				"name": "Contract > $75k",
+				"type": "String"
+			},
+			{
+				"name": "Year",
+				"type": "String"
+			},
+			{
+				"name": "Un-Forecasted Balance",
+				"type": "String"
+			},
+			{
+				"name": "Prior Years",
+				"type": "String"
+			},
+			{
+				"name": "1",
+				"type": "String"
+			},
+			{
+				"name": "2",
+				"type": "String"
+			},
+			{
+				"name": "3",
+				"type": "String"
+			},
+			{
+				"name": "Q1",
+				"type": "String"
+			},
+			{
+				"name": "4",
+				"type": "String"
+			},
+			{
+				"name": "5",
+				"type": "String"
+			},
+			{
+				"name": "6",
+				"type": "String"
+			},
+			{
+				"name": "Q2",
+				"type": "String"
+			},
+			{
+				"name": "7",
+				"type": "String"
+			},
+			{
+				"name": "8",
+				"type": "String"
+			},
+			{
+				"name": "9",
+				"type": "String"
+			},
+			{
+				"name": "Q3",
+				"type": "String"
+			},
+			{
+				"name": "10",
+				"type": "String"
+			},
+			{
+				"name": "11",
+				"type": "String"
+			},
+			{
+				"name": "12",
+				"type": "String"
+			},
+			{
+				"name": "Q4",
+				"type": "String"
+			},
+			{
+				"name": "Current Yr",
+				"type": "String"
+			},
+			{
+				"name": "Future Periods",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Classification",
+				"type": "String"
+			},
+			{
+				"name": "LTD ACTUALS FOR ACCRUAL REPORT",
+				"type": "String"
+			},
+			{
+				"name": "JAN-SEP YTD Expense",
+				"type": "String"
+			},
+			{
+				"name": "Over 150k?",
+				"type": "String"
+			},
+			{
+				"name": "Accrual Status",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
