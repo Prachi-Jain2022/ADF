@@ -1,0 +1,1146 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "testpj"
+		},
+		"Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Blob'"
+		},
+		"ExcelBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ExcelBlob'"
+		},
+		"New_Event_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/96959c2e-92eb-451f-8505-fa7be397dfb5/resourceGroups/rg_First/providers/Microsoft.Storage/storageAccounts/adfstart"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('Blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ExcelBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ExcelBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BudgetPOImport')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ExcelBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "POs",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Global Value Access FCST.xlsx",
+						"container": "input"
+					},
+					"range": "",
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "PO Number",
+						"type": "String"
+					},
+					{
+						"name": "Vendor Name",
+						"type": "String"
+					},
+					{
+						"name": "PO_AMOUNT",
+						"type": "String"
+					},
+					{
+						"name": "PO Line Number",
+						"type": "String"
+					},
+					{
+						"name": "Item Description",
+						"type": "String"
+					},
+					{
+						"name": "A$Deliver_To_Person",
+						"type": "String"
+					},
+					{
+						"name": "Currency Code",
+						"type": "String"
+					},
+					{
+						"name": "Functional Currency Amount",
+						"type": "String"
+					},
+					{
+						"name": "Currency Code Base",
+						"type": "String"
+					},
+					{
+						"name": "Quantity Ordered",
+						"type": "String"
+					},
+					{
+						"name": "Quantity Billed",
+						"type": "String"
+					},
+					{
+						"name": "Closed_Date",
+						"type": "String"
+					},
+					{
+						"name": "PO_Header_Creation_Date",
+						"type": "String"
+					},
+					{
+						"name": "PO_Line_Open_Flag",
+						"type": "String"
+					},
+					{
+						"name": "Distribution Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount_Billed",
+						"type": "String"
+					},
+					{
+						"name": "Uninvoiced Amt",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SV$Le",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SV$Dept",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SV$Acct",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SD$Acct",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SV$Pr",
+						"type": "String"
+					},
+					{
+						"name": "AcctChrg$SD$Pr",
+						"type": "String"
+					},
+					{
+						"name": "Unit Price",
+						"type": "String"
+					},
+					{
+						"name": "Units",
+						"type": "String"
+					},
+					{
+						"name": "Closed_Code",
+						"type": "String"
+					},
+					{
+						"name": "JE_PO_DESCRIPTION",
+						"type": "String"
+					},
+					{
+						"name": "Distribution_Creation_Date",
+						"type": "String"
+					},
+					{
+						"name": "on tracker (excl closed)",
+						"type": "String"
+					},
+					{
+						"name": "Line Create Date",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ExcelBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BudgetTrackerImport')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tracker",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Global Value Access FCST.xlsx",
+						"container": "input"
+					},
+					"range": "A5:BC10000",
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Seagen owner",
+						"type": "String"
+					},
+					{
+						"name": "Dept#",
+						"type": "String"
+					},
+					{
+						"name": "Committed Status",
+						"type": "String"
+					},
+					{
+						"name": "Accrual owner",
+						"type": "String"
+					},
+					{
+						"name": "Dept Sub Category",
+						"type": "String"
+					},
+					{
+						"name": "Vendor",
+						"type": "String"
+					},
+					{
+						"name": "PO #",
+						"type": "String"
+					},
+					{
+						"name": "Follow Up",
+						"type": "String"
+					},
+					{
+						"name": "On CM Accrual File",
+						"type": "String"
+					},
+					{
+						"name": "GL#",
+						"type": "String"
+					},
+					{
+						"name": "Purchasing code",
+						"type": "String"
+					},
+					{
+						"name": "Program #",
+						"type": "String"
+					},
+					{
+						"name": "Program",
+						"type": "String"
+					},
+					{
+						"name": "Region (US, Global, Canada)",
+						"type": "String"
+					},
+					{
+						"name": "Contract description",
+						"type": "String"
+					},
+					{
+						"name": "Contract currency",
+						"type": "String"
+					},
+					{
+						"name": "Exchange rate",
+						"type": "String"
+					},
+					{
+						"name": "Contract value",
+						"type": "String"
+					},
+					{
+						"name": "PO status",
+						"type": "String"
+					},
+					{
+						"name": "% Invoiced",
+						"type": "String"
+					},
+					{
+						"name": "$ Invoiced",
+						"type": "String"
+					},
+					{
+						"name": "$ Uninvoiced",
+						"type": "String"
+					},
+					{
+						"name": "Effective Date",
+						"type": "String"
+					},
+					{
+						"name": "End Date",
+						"type": "String"
+					},
+					{
+						"name": "Term (months)",
+						"type": "String"
+					},
+					{
+						"name": "Max T&E ",
+						"type": "String"
+					},
+					{
+						"name": "Accrual Source",
+						"type": "String"
+					},
+					{
+						"name": "Contract > $75k",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Un-Forecasted Balance",
+						"type": "String"
+					},
+					{
+						"name": "Prior Years",
+						"type": "String"
+					},
+					{
+						"name": "1",
+						"type": "String"
+					},
+					{
+						"name": "2",
+						"type": "String"
+					},
+					{
+						"name": "3",
+						"type": "String"
+					},
+					{
+						"name": "Q1",
+						"type": "String"
+					},
+					{
+						"name": "4",
+						"type": "String"
+					},
+					{
+						"name": "5",
+						"type": "String"
+					},
+					{
+						"name": "6",
+						"type": "String"
+					},
+					{
+						"name": "Q2",
+						"type": "String"
+					},
+					{
+						"name": "7",
+						"type": "String"
+					},
+					{
+						"name": "8",
+						"type": "String"
+					},
+					{
+						"name": "9",
+						"type": "String"
+					},
+					{
+						"name": "Q3",
+						"type": "String"
+					},
+					{
+						"name": "10",
+						"type": "String"
+					},
+					{
+						"name": "11",
+						"type": "String"
+					},
+					{
+						"name": "12",
+						"type": "String"
+					},
+					{
+						"name": "Q4",
+						"type": "String"
+					},
+					{
+						"name": "Current Yr",
+						"type": "String"
+					},
+					{
+						"name": "Future Periods",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "Classification",
+						"type": "String"
+					},
+					{
+						"name": "LTD ACTUALS FOR ACCRUAL REPORT",
+						"type": "String"
+					},
+					{
+						"name": "JAN-SEP YTD Expense",
+						"type": "String"
+					},
+					{
+						"name": "Over 150k?",
+						"type": "String"
+					},
+					{
+						"name": "Accrual Status",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Budget_PO_Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ExcelBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "finaloutput"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ExcelBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Budget_Tracker_Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ExcelBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "finaloutput"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ExcelBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TrackerInput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tracker",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Global Value Access FCST.xlsx",
+						"container": "input"
+					},
+					"range": "A5:BC1000",
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Seagen owner",
+						"type": "String"
+					},
+					{
+						"name": "Dept#",
+						"type": "String"
+					},
+					{
+						"name": "Committed Status",
+						"type": "String"
+					},
+					{
+						"name": "Accrual owner",
+						"type": "String"
+					},
+					{
+						"name": "Dept Sub Category",
+						"type": "String"
+					},
+					{
+						"name": "Vendor",
+						"type": "String"
+					},
+					{
+						"name": "PO #",
+						"type": "String"
+					},
+					{
+						"name": "Follow Up",
+						"type": "String"
+					},
+					{
+						"name": "On CM Accrual File",
+						"type": "String"
+					},
+					{
+						"name": "GL#",
+						"type": "String"
+					},
+					{
+						"name": "Purchasing code",
+						"type": "String"
+					},
+					{
+						"name": "Program #",
+						"type": "String"
+					},
+					{
+						"name": "Program",
+						"type": "String"
+					},
+					{
+						"name": "Region (US, Global, Canada)",
+						"type": "String"
+					},
+					{
+						"name": "Contract description",
+						"type": "String"
+					},
+					{
+						"name": "Contract currency",
+						"type": "String"
+					},
+					{
+						"name": "Exchange rate",
+						"type": "String"
+					},
+					{
+						"name": "Contract value",
+						"type": "String"
+					},
+					{
+						"name": "PO status",
+						"type": "String"
+					},
+					{
+						"name": "% Invoiced",
+						"type": "String"
+					},
+					{
+						"name": "$ Invoiced",
+						"type": "String"
+					},
+					{
+						"name": "$ Uninvoiced",
+						"type": "String"
+					},
+					{
+						"name": "Effective Date",
+						"type": "String"
+					},
+					{
+						"name": "End Date",
+						"type": "String"
+					},
+					{
+						"name": "Term (months)",
+						"type": "String"
+					},
+					{
+						"name": "Max T&E ",
+						"type": "String"
+					},
+					{
+						"name": "Accrual Source",
+						"type": "String"
+					},
+					{
+						"name": "Contract > $75k",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Un-Forecasted Balance",
+						"type": "String"
+					},
+					{
+						"name": "Prior Years",
+						"type": "String"
+					},
+					{
+						"name": "1",
+						"type": "String"
+					},
+					{
+						"name": "2",
+						"type": "String"
+					},
+					{
+						"name": "3",
+						"type": "String"
+					},
+					{
+						"name": "Q1",
+						"type": "String"
+					},
+					{
+						"name": "4",
+						"type": "String"
+					},
+					{
+						"name": "5",
+						"type": "String"
+					},
+					{
+						"name": "6",
+						"type": "String"
+					},
+					{
+						"name": "Q2",
+						"type": "String"
+					},
+					{
+						"name": "7",
+						"type": "String"
+					},
+					{
+						"name": "8",
+						"type": "String"
+					},
+					{
+						"name": "9",
+						"type": "String"
+					},
+					{
+						"name": "Q3",
+						"type": "String"
+					},
+					{
+						"name": "10",
+						"type": "String"
+					},
+					{
+						"name": "11",
+						"type": "String"
+					},
+					{
+						"name": "12",
+						"type": "String"
+					},
+					{
+						"name": "Q4",
+						"type": "String"
+					},
+					{
+						"name": "Current Yr",
+						"type": "String"
+					},
+					{
+						"name": "Future Periods",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "Classification",
+						"type": "String"
+					},
+					{
+						"name": "LTD ACTUALS FOR ACCRUAL REPORT",
+						"type": "String"
+					},
+					{
+						"name": "JAN-SEP YTD Expense",
+						"type": "String"
+					},
+					{
+						"name": "Over 150k?",
+						"type": "String"
+					},
+					{
+						"name": "Accrual Status",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TrackerOutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					},
+					"sheetIndex": 0
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "TrackerInput",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "Blob",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Seagen owner} as string,",
+						"          {Dept#} as string,",
+						"          {Committed Status} as string,",
+						"          {Accrual owner} as string,",
+						"          {Dept Sub Category} as string,",
+						"          Vendor as string,",
+						"          {PO #} as string,",
+						"          {Follow Up} as string,",
+						"          {On CM Accrual File} as string,",
+						"          {GL#} as string,",
+						"          {Purchasing code} as string,",
+						"          {Program #} as string,",
+						"          Program as string,",
+						"          {Region (US, Global, Canada)} as string,",
+						"          {Contract description} as string,",
+						"          {Contract currency} as string,",
+						"          {Exchange rate} as string,",
+						"          {Contract value} as string,",
+						"          {PO status} as string,",
+						"          {% Invoiced} as string,",
+						"          {$ Invoiced} as string,",
+						"          {$ Uninvoiced} as string,",
+						"          {Effective Date} as string,",
+						"          {End Date} as string,",
+						"          {Term (months)} as string,",
+						"          {Max T&E } as string,",
+						"          {Accrual Source} as string,",
+						"          {Contract > $75k} as string,",
+						"          Year as string,",
+						"          {Un-Forecasted Balance} as string,",
+						"          {Prior Years} as string,",
+						"          {1} as string,",
+						"          {2} as string,",
+						"          {3} as string,",
+						"          Q1 as string,",
+						"          {4} as string,",
+						"          {5} as string,",
+						"          {6} as string,",
+						"          Q2 as string,",
+						"          {7} as string,",
+						"          {8} as string,",
+						"          {9} as string,",
+						"          Q3 as string,",
+						"          {10} as string,",
+						"          {11} as string,",
+						"          {12} as string,",
+						"          Q4 as string,",
+						"          {Current Yr} as string,",
+						"          {Future Periods} as string,",
+						"          Comments as string,",
+						"          Classification as string,",
+						"          {LTD ACTUALS FOR ACCRUAL REPORT} as string,",
+						"          {JAN-SEP YTD Expense} as string,",
+						"          {Over 150k?} as string,",
+						"          {Accrual Status} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          each(match(/* All input columns */true()),",
+						"               /* Input name */$$ = $$)",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     truncate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     quoteAll: true,",
+						"     saveOrder: 1,",
+						"     outputAssertFailedRows: true,",
+						"     assertFailure_container: 'finaloutput',",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/TrackerInput')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "TrackerInput",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "Blob",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {Seagen owner} as string,",
+						"          {Dept#} as string,",
+						"          {Committed Status} as string,",
+						"          {Accrual owner} as string,",
+						"          {Dept Sub Category} as string,",
+						"          Vendor as string,",
+						"          {PO #} as string,",
+						"          {Follow Up} as string,",
+						"          {On CM Accrual File} as string,",
+						"          {GL#} as string,",
+						"          {Purchasing code} as string,",
+						"          {Program #} as string,",
+						"          Program as string,",
+						"          {Region (US, Global, Canada)} as string,",
+						"          {Contract description} as string,",
+						"          {Contract currency} as string,",
+						"          {Exchange rate} as string,",
+						"          {Contract value} as string,",
+						"          {PO status} as string,",
+						"          {% Invoiced} as string,",
+						"          {$ Invoiced} as string,",
+						"          {$ Uninvoiced} as string,",
+						"          {Effective Date} as string,",
+						"          {End Date} as string,",
+						"          {Term (months)} as string,",
+						"          {Max T&E } as string,",
+						"          {Accrual Source} as string,",
+						"          {Contract > $75k} as string,",
+						"          Year as string,",
+						"          {Un-Forecasted Balance} as string,",
+						"          {Prior Years} as string,",
+						"          {1} as string,",
+						"          {2} as string,",
+						"          {3} as string,",
+						"          Q1 as string,",
+						"          {4} as string,",
+						"          {5} as string,",
+						"          {6} as string,",
+						"          Q2 as string,",
+						"          {7} as string,",
+						"          {8} as string,",
+						"          {9} as string,",
+						"          Q3 as string,",
+						"          {10} as string,",
+						"          {11} as string,",
+						"          {12} as string,",
+						"          Q4 as string,",
+						"          {Current Yr} as string,",
+						"          {Future Periods} as string,",
+						"          Comments as string,",
+						"          Classification as string,",
+						"          {LTD ACTUALS FOR ACCRUAL REPORT} as string,",
+						"          {JAN-SEP YTD Expense} as string,",
+						"          {Over 150k?} as string,",
+						"          {Accrual Status} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          each(match(/* All input columns */true()),",
+						"               /* Input name */$$ = $$)",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     truncate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     quoteAll: true,",
+						"     saveOrder: 1,",
+						"     outputAssertFailedRows: true,",
+						"     assertFailure_container: 'finaloutput',",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/TrackerInput')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('factoryId'), '/linkedServices/Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-17T16:57:58Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/New_Event')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline1",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/input/blobs/Global Value Access FCST",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('New_Event_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
+			]
+		}
+	]
+}
